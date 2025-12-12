@@ -13,6 +13,27 @@ services:
     networks:
       - home_net
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      # Sync time with host
+      - /etc/localtime:/etc/localtime:ro
+      # Crucial: This gives Portainer access to control Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persistent storage for your admin password and settings
+      - portainer_data:/data
+    ports:
+      - "9443:9443"
+      # Uncomment the line below if you want non-secure HTTP on port 9000
+      # - "9000:9000"
+
+volumes:
+  portainer_data:
+
 networks:
   home_net:
     driver: bridge
